@@ -1,0 +1,104 @@
+.article {
+    border: 1px solid grey;
+    margin: 5px 5px 5px 0;
+}
+
+.High {
+    border-left: 10px solid rgba(256, 0, 0, 0.3);
+}
+
+.Medium {
+    border-left: 10px solid rgba(0, 0, 256, 0.3);
+}
+
+.Low {
+    border-left: 10px solid rgba(0, 256, 0, 0.3);
+}
+
+.Done {
+    border-left: 10px solid rgba(120, 120, 120, 0.3);
+}
+
+.radioItem {
+    cursor: pointer;
+    user-select: none;
+    padding: 5px;
+}
+
+.radioButtons {
+    border-radius: 2px;
+    margin: 5px;
+}
+
+td {
+    border: 1px solid grey;
+    padding: 10px 15px;
+    transition: .3s linear;
+}
+
+table {
+    border: 3px solid grey;
+    font-size: 10px;
+    width: 250px;
+}
+
+tr {
+    width: 30%;
+}
+
+.cardBlocks {
+    width: 30%;
+    margin-left: 3%;
+}
+
+.menuButtons {
+    font-size: 9px;
+    border: none;
+    background-color: transparent;
+    float: right;
+    padding: 3px;
+    margin-bottom: 4px;
+}
+
+.nameStatusPriority {
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+.menu {
+    width: 100%;
+    padding-bottom: 14px;
+}
+
+.carsItem {
+    cursor: pointer;
+}
+
+.carsList {
+    margin: 5px;
+    padding: 5px;
+}
+
+.browser {
+    display: inline-block;
+    padding: 5px 15px; /* Поля */
+    text-decoration: none; /* Убираем подчёркивание */
+    color: #000; /* Цвет текста */
+}
+.browser:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    color: #a00;
+    text-decoration: none;
+}
+
+.webPage {
+    margin-left: auto;
+    margin-right: auto;
+    width: 5em;
+    display: block;
+}
+
+.margin10 {
+    margin: 10px;
+}
