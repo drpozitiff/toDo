@@ -45,7 +45,7 @@ class Articles extends Component {
             <Fragment>
                 <div className="container">
                     <h1 className="jumbotron">React application</h1>
-                    <Navbar bg="light" expand="lg">
+                    <Navbar bg="light">
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="mr-auto">
                                 <Nav.Link href="/">Articles</Nav.Link>
