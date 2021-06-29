@@ -1,3 +1,7 @@
+h1 {
+    text-align: center;
+}
+
 .article {
     border: 1px solid grey;
     margin: 5px 5px 5px 0;
@@ -81,13 +85,13 @@ tr {
 
 .browser {
     display: inline-block;
-    padding: 5px 15px; /* Поля */
-    text-decoration: none; /* Убираем подчёркивание */
-    color: #000; /* Цвет текста */
+    padding: 5px 15px;
+    text-decoration: none;
+    color: #000;
 }
 .browser:hover {
     box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
-    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce);
     color: #a00;
     text-decoration: none;
 }
@@ -101,4 +105,13 @@ tr {
 
 .margin10 {
     margin: 10px;
+}
+
+@media (max-width: 992px) {
+    .cardBlock {
+        margin-left: 10px;
+    }
+    .cardBlock:first-child {
+        margin-left: 0;
+    }
 }

@@ -44,7 +44,7 @@ class Articles extends Component {
         return (
             <Fragment>
                 <div className="container">
-                    <h1 className="jumbotron">My first react application</h1>
+                    <h1 className="jumbotron">React application</h1>
                     <Navbar bg="light" expand="lg">
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="mr-auto">
@@ -61,16 +61,16 @@ class Articles extends Component {
                         }} className="btn float-right">Add</button>
                     </div>
                     {isFormOpen && <ArticleForm editableArticle={editableArticle} />} {/*-----------------Form is here---------------------*/}
-                    <div  style={{display: 'flex', width: '90%'}}>
-                        <div className="cardBlocks">
+                    <div  style={{display: 'flex', width: '90%', justifyContent: 'space-between'}}>
+                        <div className="cardBlock">
                             <h3>Active</h3>
                             <ActiveArticleList status={'Active'}/>
                         </div>
-                        <div className="cardBlocks">
+                        <div className="cardBlock">
                             <h3>Complite</h3>
                             <ActiveArticleList status={'Completed'}/>
                         </div>
-                        <div className="cardBlocks">
+                        <div className="cardBlock">
                             <h3>Change Log:</h3>
                             <ChangeLog changeLog={changeLog}/>
                         </div>
