@@ -1,9 +1,8 @@
 const defaultState = {
     articles: [],
     changelog: [],
-    isFormOpen: false,
     editableArticle: {},
-    loading: false
+
 };
 
 const articles = (state = defaultState, action) => {
@@ -21,17 +20,6 @@ const articles = (state = defaultState, action) => {
             if(action.formObject.name && action.formObject.desc && action.formObject.title) {
                 newState.articles.push(action.formObject);
             }
-            return newState;
-        }
-        case 'OPEN_FORM': {
-            const newState = JSON.parse(JSON.stringify(state));
-            newState.isFormOpen = true;
-            return newState;
-        }
-        case 'CLOSE_FORM': {
-            const newState = JSON.parse(JSON.stringify(state));
-            newState.isFormOpen = false;
-            newState.editableArticle = {};
             return newState;
         }
         case 'CHANGE_STATUS': {
@@ -76,16 +64,12 @@ const articles = (state = defaultState, action) => {
             newState.changelog.push(newChangeLogObject);
             return newState;
         }
-        case 'SHOW_LOADER':
-            return {...state, loading: true};
-        case 'HIDE_LOADER':
-            return {...state, loading: false};
-
         case 'FETCH_POSTS':
             return {...state, articles: action.payload};
         case 'EDIT_FAIL':
             console.log('Editing failed');
             return state;
+
         default:
             return state;
     }

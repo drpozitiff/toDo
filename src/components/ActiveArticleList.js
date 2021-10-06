@@ -6,9 +6,6 @@ import {deleteArticle} from "../actions/index";
 import {sortArticles} from "../helpers/index";
 
 class ActiveArticleList extends Component {
-    constructor(props) {
-        super(props);
-    }
     render () {
         const {list, deleteItem} = this.props;
         const articlesElements = list.map(article => (
@@ -25,12 +22,7 @@ class ActiveArticleList extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        deleteItem: (id) => dispatch(deleteArticle(id)),
-
-        // deleteItem: (id) => dispatch({
-        //     type: "DELETE_ARTICLE",
-        //     payload: id
-        // })
+        deleteItem: (id) => dispatch(deleteArticle(id))
     }
 };
 

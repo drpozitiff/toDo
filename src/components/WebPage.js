@@ -12,7 +12,6 @@ const WebPage = () => (
                 <Nav className="mr-auto">
                     <Nav.Link href="http://localhost:3000/">Articles</Nav.Link>
                     <Nav.Link href="http://localhost:3000/WebPage">Cars</Nav.Link>
-                    <Nav.Link href="http://localhost:3000/ReduxApp">Async</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

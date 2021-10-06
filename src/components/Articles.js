@@ -6,11 +6,20 @@ import '../styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import connect from "react-redux/es/connect/connect";
 import {openForm, closeForm, fetchPosts} from "../actions/index";
-import {Loader} from '../helpers/Loader'
-import { Navbar, Nav, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import SnackbarMessage from './SnackbarMessage';
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
+import { Container } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import AddIcon from '@mui/icons-material/Add';
+import User from './User'
 
 class Articles extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -23,72 +32,88 @@ class Articles extends Component {
             ]
         };
     }
+
+    getStyle = () => {
+        return {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+        };
+    };
+
+
     componentWillMount () {
         this.props.fetchPosts();
     }
     render () {
         const {changeLog} = this.state;
-        const {isFormOpen, openForm, editableArticle, fetchPosts, loading} = this.props;
-        const  loadingButton = () => {
-            if (loading){
-                return <Loader />
-            } else {
-                return <Button
-                    variant="outline-info"
-                    style={{padding:'0.25rem', marginTop:'1rem'}}
-                    onClick={() => fetchPosts()}
-                >Refresh</Button>
-            }
-        };
+        const {isFormOpen, openForm, closeForm, editableArticle, isAuth} = this.props;
 
         return (
             <Fragment>
-                <div className="container">
-                    <h1 className="jumbotron">React application</h1>
-                    <Navbar bg="light">
-                        <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="mr-auto">
-                                <Nav.Link href="/">Articles</Nav.Link>
-                                <Nav.Link href="/WebPage">Cars</Nav.Link>
-                                <Nav.Link href="/ReduxApp">Async</Nav.Link>
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Navbar>
-                    {loadingButton()}
-                    <div className="card card-text" style={{margin:'20px', backgroundColor:'#F5F5F5'}}>
-                        <button onClick={() => {
-                            openForm();
-                        }} className="btn float-right">Add</button>
-                    </div>
-                    {isFormOpen && <ArticleForm editableArticle={editableArticle} />} {/*-----------------Form is here---------------------*/}
-                    <div  style={{display: 'flex', width: '90%', justifyContent: 'space-between'}}>
-                        <div className="cardBlock">
-                            <h3>Active</h3>
+
+                <Container maxWidth="lg" className='wrapper'>
+                    <Grid container spacing={4} justifyContent="center" sx={{ flexGrow: 1 }}>
+                        <Grid item xs={6} md={4} lg={4}>
+                            <Typography variant="h5">Active</Typography>
                             <ActiveArticleList status={'Active'}/>
-                        </div>
-                        <div className="cardBlock">
-                            <h3>Complite</h3>
+                        </Grid>
+                        <Grid item xs={6} md={4} lg={4}>
+                            <Typography variant="h5">Complete</Typography>
                             <ActiveArticleList status={'Completed'}/>
-                        </div>
-                        <div className="cardBlock">
-                            <h3>Change Log:</h3>
+                        </Grid>
+                        <Grid item xs={12} md={4} lg={4}>
+                            {isAuth &&
+                                <Button
+                                    onClick={() => {openForm()}}
+                                    className="add-new-article"
+                                    style={{
+                                        textAlign: "center",
+                                        color: 'black'
+                                    }}
+                                >
+                                    <div className="addIcon"><AddIcon  fontSize="small"/></div>
+                                    <Typography variant="h6">Create new article</Typography>
+                                </Button>
+                            }
+                            {isAuth && <User/>}
+                            <Typography sx={{mt: 2.5}} variant="h5">Change Log:</Typography>
                             <ChangeLog changeLog={changeLog}/>
-                        </div>
-                    </div>
-                </div>
+                        </Grid>
+                    </Grid>
+                </Container>
+                <Modal
+                    open={isFormOpen}
+                    onClose={() => closeForm()}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={this.getStyle()}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            <ArticleForm editableArticle={editableArticle} />
+                        </Typography>
+                    </Box>
+                </Modal>
+                <SnackbarMessage/>
             </Fragment>
         )
     }
 }
 
 const mapStateToProps = (state) => {
-    const loading = state.articles.loading;
-    const isFormOpen = state.articles.isFormOpen;
+    const isFormOpen = state.users.isFormOpen;
+    const isAuth = state.users.isAuth;
     const editableArticle = state.articles.editableArticle;
     return {
         isFormOpen: isFormOpen,
-        editableArticle: editableArticle,
-        loading: loading
+        isAuth: isAuth,
+        editableArticle: editableArticle
     }
 };
 

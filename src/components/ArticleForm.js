@@ -13,7 +13,7 @@ class ArticleForm extends Component {
             name: '',
             desc:'',
             title: '',
-            priority: '',
+            priority: 'High',
             status: '',
             mode: '',
             date: ''
@@ -30,10 +30,10 @@ class ArticleForm extends Component {
 
     save = () => {
         const {editArticle, editableArticle, addNewArticle, toChangelog} = this.props;
-        const {id, name, desc, title, priority, status} = this.state;
-        if (!name || !desc || !title || !priority) {
+        const {id, name, desc, title, priority, status, mode} = this.state;
+        if (!name || !desc || !title) {
             console.log('no value');
-        } else if (!name.trim() || !desc.trim() || !title.replace( /\s/g, "")) {
+        } else if (!name.trim() || !desc.trim() || !title.trim()) {
             console.log('empty value');
         } else if  (!_.isEmpty(editableArticle)) {
             editArticle({
@@ -63,6 +63,7 @@ class ArticleForm extends Component {
                 changelogAction: 'Created',
                 title: title
             });
+            console.log("prior",id, name, desc, title, priority, status, mode);
         }
     };
 
@@ -71,7 +72,7 @@ class ArticleForm extends Component {
             name: '',
             title: '',
             desc: '',
-            priority: '',
+            priority: 'High',
             id: '',
             status: '',
             date: ''
@@ -84,7 +85,7 @@ class ArticleForm extends Component {
             name: obj.name,
             title: obj.title,
             desc: obj.desc,
-            priority: obj.priority,
+            priority: obj.priority || 'High',
             status: obj.status,
             mode: !_.isEmpty(obj) ? 'EDIT' : 'CREATE'
         });
@@ -92,6 +93,7 @@ class ArticleForm extends Component {
     componentWillReceiveProps (nextProps, nextState) {
         const {editableArticle} = nextProps;
         this.fillForm(editableArticle);
+        console.log(editableArticle)
     }
 
     componentDidMount () {
@@ -116,7 +118,7 @@ class ArticleForm extends Component {
                 <Form.Group>
                     <Form.Label>Priority:</Form.Label>
                     <div>
-                        <Form.Check inline label="High" name="contact" type="radio" id="priorityChoice1" value="High" checked={!(priority === "Medium" || priority === "Low")} onChange={(event)=>
+                        <Form.Check inline label="High" name="contact" type="radio" id="priorityChoice1" value="High" checked={priority === "High"} onChange={(event)=>
                             this.setState({
                                 priority: event.target.value
                             })

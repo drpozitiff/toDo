@@ -1,37 +1,46 @@
 import React, {Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-import { Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import _ from 'underscore';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+
 class ChangeLog extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
     render () {
         const {changelog} = this.props;
         const changelogElements = changelog.map(changelog => (
             changelog.changelogAction &&
-                <tr key={changelog.id}>
-                    <td>{changelog.changelogAction}</td>
-                    <td>{changelog.title}</td>
-                    <td>{changelog.date}</td>
-                </tr>
+                <TableRow key={changelog.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">{changelog.changelogAction}</TableCell>
+                    <TableCell align="right">{changelog.title}</TableCell>
+                    <TableCell align="right">{changelog.date}</TableCell>
+                </TableRow>
             )
         );
         return(
-            <Table striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <td>Action</td>
-                        <td>Title</td>
-                        <td>Date</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {!_.isEmpty(changelog) ? changelogElements  :  <tr><td>No data</td><td> </td><td> </td></tr>}
-                </tbody>
-            </Table>
+            <TableContainer sx={{mt: 2.5}} component={Paper}>
+                <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="right">Action</TableCell>
+                            <TableCell align="right">Title</TableCell>
+                            <TableCell align="right">Date</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {!_.isEmpty(changelog) ? changelogElements  :  <TableRow><TableCell>No data</TableCell><TableCell> </TableCell><TableCell> </TableCell></TableRow>}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         )
     }
 }

@@ -1,5 +1,6 @@
-h1 {
-    text-align: center;
+body {
+    background-color: #f4f4f4;
+    color: #212121;
 }
 
 .article {
@@ -32,46 +33,6 @@ h1 {
 .radioButtons {
     border-radius: 2px;
     margin: 5px;
-}
-
-td {
-    border: 1px solid grey;
-    padding: 10px 15px;
-    transition: .3s linear;
-}
-
-table {
-    border: 3px solid grey;
-    font-size: 10px;
-    width: 250px;
-}
-
-tr {
-    width: 30%;
-}
-
-.cardBlocks {
-    width: 30%;
-    margin-left: 3%;
-}
-
-.menuButtons {
-    font-size: 9px;
-    border: none;
-    background-color: transparent;
-    float: right;
-    padding: 3px;
-    margin-bottom: 4px;
-}
-
-.nameStatusPriority {
-    font-size: 12px;
-    padding-left: 10px;
-}
-
-.menu {
-    width: 100%;
-    padding-bottom: 14px;
 }
 
 .carsItem {
@@ -114,4 +75,44 @@ tr {
     .cardBlock:first-child {
         margin-left: 0;
     }
+}
+
+.signUpBtn {
+    margin-top: 13px;
+}
+
+.regMenu {
+    display: flex;
+    justify-content: center;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 0.7rem;
+    margin-top: -16px;
+}
+
+.wrapper {
+    margin-top: 80px;
+}
+
+.navLink {
+    color: #212121;
+    transition-property: color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+    transition-delay: 0s;
+}
+
+.navLink:hover {
+    color: #8ac858;
+}
+
+.addIcon {
+    margin: 0 10px 0 0;
+    transition: transform 0.5s;
+}
+
+.add-new-article:hover .addIcon {
+    transform: rotate(270deg);
 }

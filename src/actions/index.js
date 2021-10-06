@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 export const select = (id) => {
@@ -150,3 +149,30 @@ export function fetchPosts() {
         }
     }
 }
+
+export const showSnackbar = (message) => {
+    return {
+        type: "SHOW_SNACKBAR",
+        payload: message
+    };
+};
+
+export const hideSnackbar = () => {
+    return {
+        type: "HIDE_SNACKBAR"
+    };
+};
+
+export const setCookie = (cookie) => {
+    return {
+        type: "SET_COOKIE",
+        cookie
+    };
+};
+
+export const setUserData = (userData) => {
+    return {
+        type: "SHOW_USER_DATA",
+        payload: userData
+    }
+};

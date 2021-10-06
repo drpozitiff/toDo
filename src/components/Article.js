@@ -1,20 +1,45 @@
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import {changeStatus, openForm, takeEditableArticle, toChangelog} from "../actions/index";
-import { Card, Button, ButtonGroup } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 class Article extends Component {
     constructor(props) {
         super(props);
     }
     render() {
-        const {article, deleteItem, changeStatus, openForm, takeEditableArticle, toChangelog} = this.props;
+        const {article, deleteItem, changeStatus, openForm, takeEditableArticle, toChangelog, isAuth} = this.props;
         const container =
-            <Card style={{width:'18rem', marginBottom: '20px'}}>
-                <Card.Body  className={article.priority} style={{padding:'0.7rem'}}>
-                    <Card.Header style={{backgroundColor:'white', padding:'0.1rem'}}>
+                <Card sx={{ minWidth: 200, mt: 2.5, maxWidth: 300 }}  className={article.priority}>
+                    <CardContent>
+                        <Typography variant="h5" sx={{ mb: 1.5 }} component="div">
+                            {article.title}
+                        </Typography>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            <b>Name:</b> {article.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            <b>Status:</b> {article.status}
+                        </Typography>
+                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            <b>Priority:</b> {article.priority}
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            {article.desc}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mb: -1.5 }}>
+                            creation date: {article.date}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
                         <ButtonGroup>
+                            {isAuth &&
                             <div style={{float:'right'}}>
                                 <Button variant="outline-light" size="sm" style={{border:'none', color:'grey', float:'right'}} onClick={() => {
                                     deleteItem(article.id);
@@ -36,24 +61,23 @@ class Article extends Component {
                                     openForm();
                                     takeEditableArticle(article.id);
                                 }}>Edit</Button>
-                            </div>
+
+                            </div>}
                         </ButtonGroup>
-                    </Card.Header>
-                    <Card.Title style={{padding:'0.4rem'}}>{article.title}</Card.Title>
-                    <Card.Text style={{padding:'0.4rem'}}>{article.desc}</Card.Text>
-                    <Card.Body>
-                        <Card.Text className="nameStatusPriority"><b>Name:</b> {article.name}</Card.Text>
-                        <Card.Text className="nameStatusPriority"><b>Status:</b> {article.status}</Card.Text>
-                        <Card.Text className="nameStatusPriority"><b>Priority:</b> {article.priority}</Card.Text>
-                    </Card.Body>
-                    <Card.Footer style={{backgroundColor:'white', padding:'1px', float:'right'}}><small className="text-muted">creation date: {article.date}</small></Card.Footer>
-                </Card.Body>
-            </Card>;
+                    </CardActions>
+                </Card>;
         return (
             <section>{container}</section>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    const isAuth = state.users.isAuth;
+    return {
+        isAuth: isAuth
+    }
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -63,4 +87,4 @@ const mapDispatchToProps = (dispatch) => {
         toChangelog: (changelogObject) => dispatch(toChangelog(changelogObject))
     }
 };
-export default connect(null, mapDispatchToProps)(Article)
+export default connect(mapStateToProps, mapDispatchToProps)(Article)
