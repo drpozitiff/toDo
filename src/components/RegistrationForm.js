@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
-import {showSnackbar, hideSnackbar, setCookie, setUserData} from "../actions/index";
+import {showSnackbar, hideSnackbar, setCookie, saveUserData} from "../actions/index";
 import connect from "react-redux/es/connect/connect";
 
-const registration = async (registrationObject, registrationType, showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, setUserData) => {
+const registration = async (registrationObject, registrationType, showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData) => {
     await axios.post(`http://localhost:3001/auth/${registrationType}`, registrationObject)
         .then(res => {
             const userData = {
@@ -18,11 +17,11 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
             });
             (registrationType === "login") && setIsAuth(true);
             handleOpenClose(false);
-            setUserData(userData);
+            saveUserData(userData);
         }).catch(err => {
             showSnackbar({
                 severity: 'error',
-                message: err.response?.data.message
+                message: err.response.data.message
             });
             const errors = err.response.data.errors;
             for(let i = 0; i < errors.length; i++){
@@ -55,16 +54,13 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
         });
 };
 
-const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, setUserData}) => {
+const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, saveUserData}) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-    const dispatch = useDispatch();
-// dispatch(showSnackbar("ffgfgfgf"))
-    const isSnackbarOpen = useSelector((state) => state.users.isSnackbarOpen);
     const registrationObject = {
         "username": username,
         "email": email,
@@ -97,13 +93,13 @@ const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, se
                 {
                     !isLogin &&
                     <Button variant="outline-secondary" className="signUpBtn btn" onClick={() => {
-                        registration(registrationObject, "login", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, setUserData);
+                        registration(registrationObject, "login", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData);
                     }}>Login</Button>
                 }
                 {
                     isLogin &&
                     <Button variant="outline-secondary" className="signUpBtn btn" onClick={() => {
-                        registration(registrationObject, "registration", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, setUserData);
+                        registration(registrationObject, "registration", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData);
                     }}>Sign up</Button>
                 }
             </div>
@@ -123,7 +119,7 @@ const mapDispatchToProps = (dispatch) => {
         showSnackbar: (message) => dispatch(showSnackbar(message)),
         hideSnackbar: () => dispatch(hideSnackbar()),
         setIsAuth: (cookie) => dispatch(setCookie(cookie)),
-        setUserData: (userData) => dispatch(setUserData(userData))
+        saveUserData: (userData) => dispatch(saveUserData(userData))
     }
 };
 

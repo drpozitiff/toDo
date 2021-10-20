@@ -89,7 +89,6 @@ body {
 .errorMessage {
     color: red;
     font-size: 0.7rem;
-    margin-top: -16px;
 }
 
 .wrapper {

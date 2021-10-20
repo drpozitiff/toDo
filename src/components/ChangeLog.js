@@ -11,8 +11,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import {getChangelog} from "../actions/index";
+
 
 class ChangeLog extends Component {
+    componentWillMount () {
+        this.props.getChangelog();
+    }
     render () {
         const {changelog} = this.props;
         const changelogElements = changelog.map(changelog => (
@@ -22,7 +27,7 @@ class ChangeLog extends Component {
                 >
                     <TableCell component="th" scope="row">{changelog.changelogAction}</TableCell>
                     <TableCell align="right">{changelog.title}</TableCell>
-                    <TableCell align="right">{changelog.date}</TableCell>
+                    <TableCell sx={{fontSize: 12}} align="right">{changelog.date}</TableCell>
                 </TableRow>
             )
         );
@@ -52,4 +57,10 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, null)(ChangeLog)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getChangelog: () => dispatch(getChangelog())
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangeLog)

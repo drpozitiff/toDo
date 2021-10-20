@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-import cars from './cars';
+import fish from './fish';
 import articles from './articles';
 import users from './users';
 
 const allReducers = combineReducers ({
-    cars,
+    fish,
     articles,
     users
 });

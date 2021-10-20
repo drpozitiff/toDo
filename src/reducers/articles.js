@@ -2,11 +2,22 @@ const defaultState = {
     articles: [],
     changelog: [],
     editableArticle: {},
-
+    isFormOpen: false
 };
 
 const articles = (state = defaultState, action) => {
     switch (action.type) {
+        case 'OPEN_FORM': {
+            const newState = JSON.parse(JSON.stringify(state));
+            newState.isFormOpen = true;
+            return newState;
+        }
+        case 'CLOSE_FORM': {
+            const newState = JSON.parse(JSON.stringify(state));
+            newState.isFormOpen = false;
+            newState.editableArticle = {};
+            return newState;
+        }
         case 'DELETE_ARTICLE': {
             const newState = JSON.parse(JSON.stringify(state));
             // const newState = Object.assign({}, state);
@@ -26,7 +37,7 @@ const articles = (state = defaultState, action) => {
             let newState = JSON.parse(JSON.stringify(state));
             newState.articles = newState.articles.map(article => {
                 if (article.id === action.resId) {
-                    article.status = "Completed";
+                    article.status = "Accomplished";
                 }
                 return article;
             });
@@ -53,16 +64,16 @@ const articles = (state = defaultState, action) => {
             return newState;
         }
         case 'ADD_CHANGELOG': {
-            const {changelogAction, title} = action.changelogObject;
-            let newChangeLogObject = {
-                id: new Date().getTime(),
-                changelogAction: changelogAction,
-                title: title,
-                date: new Date().toLocaleString()
-            };
             let newState = JSON.parse(JSON.stringify(state));
-            newState.changelog.push(newChangeLogObject);
+            newState.changelog.push(action.newChangelogObject);
             return newState;
+        }
+        case 'ADD_CHANGELOG_FAIL': {
+            console.log('ADD_CHANGELOG_FAIL');
+            return state;
+        }
+        case 'FETCH_CHANGELOG': {
+            return {...state, changelog: action.payload};
         }
         case 'FETCH_POSTS':
             return {...state, articles: action.payload};

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import _ from 'underscore';
-import {addNewArticle, openForm, closeForm, editArticle, toChangelog} from "../actions/index";
+import {addNewArticle, openForm, closeForm, editArticle, toChangelog, showSnackbar} from "../actions/index";
 import connect from "react-redux/es/connect/connect";
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import moment from 'moment';
 
 class ArticleForm extends Component {
     constructor(props) {
@@ -15,8 +16,9 @@ class ArticleForm extends Component {
             title: '',
             priority: 'High',
             status: '',
-            mode: '',
-            date: ''
+            mode: 'CREATE',
+            date: '',
+            validationErrors: {}
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,42 +30,63 @@ class ArticleForm extends Component {
         });
     }
 
-    save = () => {
-        const {editArticle, editableArticle, addNewArticle, toChangelog} = this.props;
-        const {id, name, desc, title, priority, status, mode} = this.state;
-        if (!name || !desc || !title) {
-            console.log('no value');
-        } else if (!name.trim() || !desc.trim() || !title.trim()) {
-            console.log('empty value');
+    save = (clearForm, closeForm) => {
+        const {editArticle, editableArticle, addNewArticle, toChangelog, showSnackbar} = this.props;
+        const {id, name, desc, title, priority, status} = this.state;
+        const errors = {};
+        if (!name?.trim() || !desc?.trim() || !title?.trim()) {
+            !name?.trim() ? errors.name = "Please, enter your name" : errors.name='';
+            !desc?.trim() ? errors.desc = "Please, enter some description" : errors.desc='';
+            !title?.trim() ? errors.title = "Please, enter title" : errors.title='';
+            this.setState({
+                validationErrors: errors
+            });
         } else if  (!_.isEmpty(editableArticle)) {
+            this.setState({
+                validationErrors: {}
+            });
             editArticle({
                 "id" : id,
                 "name" : name,
                 "desc" : desc,
                 "title" : title,
                 "status" : status,
-                "date" : new Date().toLocaleString(),
-                "priority" : priority
+                "date" : moment().format('llll'),
+                "priority" : priority,
+            });
+            showSnackbar({
+                severity: 'success',
+                message: 'Changes saved!'
             });
             toChangelog({
                 changelogAction: 'Edited',
                 title: title
             });
+            clearForm();
+            closeForm();
         } else {
+            this.setState({
+                validationErrors: {}
+            });
             addNewArticle({
                 "id" : new Date().getTime(),
                 "name" : name,
                 "desc" : desc,
                 "title" : title,
                 "status" : "Active",
-                "date" : new Date().toLocaleString(),
+                "date" : moment().format('llll'),
                 "priority" : priority
+            });
+            showSnackbar({
+                severity: 'success',
+                message: 'Article added!'
             });
             toChangelog({
                 changelogAction: 'Created',
                 title: title
             });
-            console.log("prior",id, name, desc, title, priority, status, mode);
+            clearForm();
+            closeForm();
         }
     };
 
@@ -75,7 +98,8 @@ class ArticleForm extends Component {
             priority: 'High',
             id: '',
             status: '',
-            date: ''
+            date: '',
+            mode: 'CREATE'
         });
     };
 
@@ -90,11 +114,10 @@ class ArticleForm extends Component {
             mode: !_.isEmpty(obj) ? 'EDIT' : 'CREATE'
         });
     };
-    componentWillReceiveProps (nextProps, nextState) {
-        const {editableArticle} = nextProps;
-        this.fillForm(editableArticle);
-        console.log(editableArticle)
-    }
+    // componentWillReceiveProps (nextProps, nextState) {
+    //     const {editableArticle} = nextProps;
+    //     this.fillForm(editableArticle);
+    // }
 
     componentDidMount () {
         const {editableArticle} = this.props;
@@ -102,17 +125,20 @@ class ArticleForm extends Component {
     }
 
     render() {
-        const {name, desc, title, priority} = this.state;
-        const {editableArticle, closeForm} = this.props;
+        const {name, desc, title, priority, validationErrors, mode} = this.state;
+        const {closeForm} = this.props;
         return (
             <Form>
                 <Form.Group>
                     <Form.Label>Title:</Form.Label>
                     <Form.Control as="input" value={title} onChange={(event) => {this.setState({title: event.target.value})}} />
+                    {validationErrors.title && <div className="errorMessage">{validationErrors.title}</div>}
                     <Form.Label>Name:</Form.Label>
                     <Form.Control as="input" value={name} onChange={this.handleChange} />
+                    {validationErrors.name && <div className="errorMessage">{validationErrors.name}</div>}
                     <Form.Label>Description:</Form.Label>
                     <Form.Control as="textarea" style={{resize:"none"}} rows="6" value={desc} onChange={(event) => {this.setState({desc: event.target.value})}}>''</Form.Control>
+                    {validationErrors.desc && <div className="errorMessage">{validationErrors.desc}</div>}
                 </Form.Group>
 
                 <Form.Group>
@@ -138,15 +164,15 @@ class ArticleForm extends Component {
 
                 <Form.Group>
                     <Button variant="outline-secondary" className="btn margin10" onClick={() => {
+                        console.log("state--", this.state)
                         this.clearForm();
+                        console.log("after clearform func state--", this.state)
                         closeForm();
                     }}>Cansel
                     </Button>
                     <Button variant="outline-secondary" className="btn margin10" onClick={() => {
-                        this.save();
-                        this.clearForm();
-                        closeForm();
-                        }}>{!_.isEmpty(editableArticle) ? "Edit" : "Create"}
+                        this.save(this.clearForm, closeForm);
+                    }}>{mode === "EDIT" ? "Edit" : "Create"}
                     </Button>
                 </Form.Group>
             </Form>
@@ -162,7 +188,8 @@ const mapDispatchToProps = (dispatch) => {
         openForm: () => dispatch(openForm()),
         editArticle: (formObject) => dispatch(editArticle(formObject)),
         closeForm: () => dispatch(closeForm()),
-        toChangelog: (changelogObject) => dispatch(toChangelog(changelogObject))
+        toChangelog: (changelogObject) => dispatch(toChangelog(changelogObject)),
+        showSnackbar: (message) => dispatch(showSnackbar(message))
     }
 };
 export default connect(null, mapDispatchToProps)(ArticleForm)

@@ -5,7 +5,7 @@ import ArticleForm from './ArticleForm';
 import '../styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import connect from "react-redux/es/connect/connect";
-import {openForm, closeForm, fetchPosts} from "../actions/index";
+import {openForm, closeForm, fetchPosts, getChangelog} from "../actions/index";
 import 'bootstrap/dist/css/bootstrap.css';
 import SnackbarMessage from './SnackbarMessage';
 
@@ -57,7 +57,6 @@ class Articles extends Component {
 
         return (
             <Fragment>
-
                 <Container maxWidth="lg" className='wrapper'>
                     <Grid container spacing={4} justifyContent="center" sx={{ flexGrow: 1 }}>
                         <Grid item xs={6} md={4} lg={4}>
@@ -65,8 +64,8 @@ class Articles extends Component {
                             <ActiveArticleList status={'Active'}/>
                         </Grid>
                         <Grid item xs={6} md={4} lg={4}>
-                            <Typography variant="h5">Complete</Typography>
-                            <ActiveArticleList status={'Completed'}/>
+                            <Typography variant="h5">Accomplished</Typography>
+                            <ActiveArticleList status={'Accomplished'}/>
                         </Grid>
                         <Grid item xs={12} md={4} lg={4}>
                             {isAuth &&
@@ -107,7 +106,7 @@ class Articles extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const isFormOpen = state.users.isFormOpen;
+    const isFormOpen = state.articles.isFormOpen;
     const isAuth = state.users.isAuth;
     const editableArticle = state.articles.editableArticle;
     return {
@@ -121,7 +120,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         openForm: () => dispatch(openForm()),
         closeForm: () => dispatch(closeForm()),
-        fetchPosts: () => dispatch(fetchPosts())
+        fetchPosts: () => dispatch(fetchPosts()),
+        getChangelog: () => dispatch(getChangelog())
     }
 };
 

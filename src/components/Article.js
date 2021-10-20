@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {changeStatus, openForm, takeEditableArticle, toChangelog} from "../actions/index";
-import Box from '@mui/material/Box';
+import {changeStatus, openForm, takeEditableArticle, toChangelog, showSnackbar} from "../actions/index";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -10,13 +9,10 @@ import Typography from '@mui/material/Typography';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 class Article extends Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
-        const {article, deleteItem, changeStatus, openForm, takeEditableArticle, toChangelog, isAuth} = this.props;
+        const {article, deleteItem, changeStatus, openForm, takeEditableArticle, toChangelog, isAuth, showSnackbar} = this.props;
         const container =
-                <Card sx={{ minWidth: 200, mt: 2.5, maxWidth: 300 }}  className={article.priority}>
+                <Card sx={{ minWidth: 200, mt: 2.5}}  className={article.priority}>
                     <CardContent>
                         <Typography variant="h5" sx={{ mb: 1.5 }} component="div">
                             {article.title}
@@ -33,8 +29,8 @@ class Article extends Component {
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                             {article.desc}
                         </Typography>
-                        <Typography variant="body2" sx={{ mb: -1.5 }}>
-                            creation date: {article.date}
+                        <Typography variant="body2" sx={{ mb: -1.5, fontSize: 11 }}>
+                            <b>Creation date:</b> {article.date}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -43,6 +39,10 @@ class Article extends Component {
                             <div style={{float:'right'}}>
                                 <Button variant="outline-light" size="sm" style={{border:'none', color:'grey', float:'right'}} onClick={() => {
                                     deleteItem(article.id);
+                                    showSnackbar({
+                                        severity: 'success',
+                                        message: 'Article deleted!'
+                                    });
                                     toChangelog({
                                             changelogAction: 'Deleted',
                                             title: article.title
@@ -51,8 +51,12 @@ class Article extends Component {
                                 }}>Delete</Button>
                                 {article.status === "Active" && <Button variant="outline-light" size="sm" style={{border:'none', color:'grey'}} onClick={() => {
                                     changeStatus(article.id);
+                                    showSnackbar({
+                                        severity: 'success',
+                                        message: 'Article accomplished!'
+                                    });
                                     toChangelog({
-                                            changelogAction: 'Completed',
+                                            changelogAction: 'Accomplished',
                                             title: article.title
                                         }
                                     );
@@ -84,7 +88,8 @@ const mapDispatchToProps = (dispatch) => {
         changeStatus: (id) => dispatch(changeStatus(id)),
         takeEditableArticle: (id) => dispatch(takeEditableArticle(id)),
         openForm: () => dispatch(openForm()),
-        toChangelog: (changelogObject) => dispatch(toChangelog(changelogObject))
+        toChangelog: (changelogObject) => dispatch(toChangelog(changelogObject)),
+        showSnackbar: (message) => dispatch(showSnackbar(message))
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Article)

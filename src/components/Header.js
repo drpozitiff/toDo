@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Nav } from 'react-bootstrap';
 import connect from "react-redux/es/connect/connect";
-import {setCookie, setUserData} from "../actions/index";
+import {setCookie, saveUserData} from "../actions/index";
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
@@ -22,7 +22,7 @@ import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import { Container } from '@mui/material';
 
-const Header = ({isAuth, setCookie, setUserData}) => {
+const Header = ({isAuth, setCookie, saveUserData}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
 
@@ -39,9 +39,10 @@ const Header = ({isAuth, setCookie, setUserData}) => {
         await axios.post('http://localhost:3001/auth/logout')
             .then(res => {
                 setCookie(false);
-                setUserData({
+                saveUserData({
                     userName: '',
-                    userEmail: ''
+                    userEmail: '',
+                    userId: ''
                 });
                 console.log(res.data.message);
             }).catch(err => {
@@ -149,9 +150,9 @@ const Header = ({isAuth, setCookie, setUserData}) => {
                                                             className="navLink"
                                                         >Articles</Nav.Link></MenuItem>
                                                         <MenuItem onClick={handleClose}><Nav.Link
-                                                            href="/WebPage"
+                                                            href="/infofish/FishApp"
                                                             className="navLink"
-                                                        >Cars</Nav.Link></MenuItem>
+                                                        >FishInfo</Nav.Link></MenuItem>
                                                     </MenuList>
                                                 </ClickAwayListener>
                                             </Paper>
@@ -218,7 +219,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setCookie: (cookie) => dispatch(setCookie(cookie)),
-        setUserData: (userData) => dispatch(setUserData(userData))
+        saveUserData: (userData) => dispatch(saveUserData(userData))
     }
 };
 

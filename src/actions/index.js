@@ -1,11 +1,5 @@
 import axios from 'axios';
-
-export const select = (id) => {
-    return {
-        type: "CAR_SELECTED",
-        id: id
-    }
-};
+import moment from 'moment';
 
 export const deleteArticle = (id) => {
     return async dispatch => {
@@ -26,8 +20,8 @@ export const addNewArticle = (formObject) => {
             const resId = await axios.post('http://localhost:3001/articles/createArticle', {formObject})
                 .then(res => {
                     return res.data
-                }).catch((err)=>{console.log('create err',err)});
-            if (resId !== "Fatal error!") {
+                }).catch((err)=>{console.log('creation err',err)});
+            if (resId !== "CREATION_ERROR") {
                 dispatch({
                     type: "CREATE_ARTICLE",
                     formObject
@@ -49,7 +43,7 @@ export const editArticle = (formObject) => {
                 return res.data
             }).catch((err)=>{console.log('edit err',err)});
         console.log('resId',resId);
-        if (resId !== "Fatal error!") {
+        if (resId !== "EDITING_ERROR") {
             dispatch({
                 type: "EDIT_ARTICLE",
                 formObject
@@ -88,6 +82,7 @@ export const changeStatus = (id) => {
     };
 };
 
+
 export const takeEditableArticle = (id) => {
     return {
         type: "TAKE_ARTICLE",
@@ -96,9 +91,38 @@ export const takeEditableArticle = (id) => {
 };
 
 export const toChangelog = (changelogObject) => {
-    return {
-        type: 'ADD_CHANGELOG',
-        changelogObject: changelogObject
+    const newChangelogObject = {
+        ...changelogObject,
+        date: moment().format('llll'),
+        id: new Date().getTime()
+    }
+    return async dispatch => {
+        const resStatus = await axios.post('http://localhost:3001/articles/addToChangelog', {newChangelogObject})
+            .then(res => {
+                return res.data.message
+            }).catch((err)=>{console.log('add to changelog err',err)});
+        if(resStatus !== "ADD_TO_CHANGELOG__ERROR") {
+            dispatch ({
+                type: 'ADD_CHANGELOG',
+                newChangelogObject
+            });
+        } else {
+            dispatch ({
+                type: 'ADD_CHANGELOG_FAIL'
+            });
+        }
+    };
+};
+
+export const getChangelog = () => {
+    return async dispatch => {
+        await axios.get('http://localhost:3001/articles/getChangelog')
+        .then(res => {
+            dispatch({
+                type: 'FETCH_CHANGELOG',
+                payload: res.data
+            })
+        }).catch((err)=>{console.log('getChangelog err',err)});
     }
 };
 
@@ -129,7 +153,7 @@ export function fetchPosts() {
             //     name: 'name',
             //     name2: 'name2'
             // };
-            const response = await fetch('http://localhost:3001/articles',
+            const response = await fetch('http://localhost:3001/articles/getArticles',
                 {
                     // mode: 'no-cors',
                     method: 'GET',
@@ -170,9 +194,40 @@ export const setCookie = (cookie) => {
     };
 };
 
-export const setUserData = (userData) => {
+export const saveUserData = (userData) => {
     return {
-        type: "SHOW_USER_DATA",
+        type: "SAVE_USER_DATA",
         payload: userData
+    }
+};
+
+export const getBases = () => {
+    return async dispatch => {
+        await axios.get('http://localhost:3001/fish/getBases')
+            .then(res => {
+                dispatch({
+                    type: 'GET_BASES',
+                    payload: res.data
+                })
+            }).catch((err)=>{console.log('getBases err',err)});
+    };
+};
+
+export const getFishInfo = (baseID) => {
+    return async dispatch => {
+        await axios.get(`http://localhost:3001/fish/getFishBase?baseId=${baseID}`)
+            .then(res => {
+                dispatch({
+                    type: 'GET_FISH_INFO',
+                    payload: res.data
+                })
+            }).catch((err)=>{console.log('getFishInfo err',err)});
+    };
+};
+
+export const setCurrentBase = (baseId) => {
+    return {
+        type: "SET_CURRENT_BASE",
+        payload: baseId
     }
 };
