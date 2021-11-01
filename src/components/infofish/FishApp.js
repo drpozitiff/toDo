@@ -7,11 +7,11 @@ import FishTable from './FishTable';
 const FishApp = () => {
     return(
         <Grid sx={{mt: 8, flexGrow: 1}} justifyContent="center" container spacing={2}>
-            <Grid item xs={9}>
+            <Grid item lg={8} sm={11}>
                 <BasesTabs/>
                 <FishTable/>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item lg={3} sm={11}>
                 <BaseInfoCard/>
             </Grid>
         </Grid>

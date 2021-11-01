@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Box, Tab, tabsClasses, Tabs, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {getBases, setCurrentBase, getFishInfo} from "../../actions/index";
+import {getBases, setCurrentBase, getFishInfo, getUserFishInfo} from "../../actions/index";
 import {useDispatch, useSelector} from 'react-redux';
 
 export const BasesTabs = () => {
@@ -11,7 +11,7 @@ export const BasesTabs = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getBases());
-    }, bases);
+    }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -36,14 +36,22 @@ export const BasesTabs = () => {
                             key={key.baseId}
                             label={key.baseName}
                             onClick={()=>{
-                                dispatch(setCurrentBase(key.baseId))
-                                dispatch(getFishInfo(key.baseId))
+                                dispatch(setCurrentBase(key.baseId));
                             }}
                         />
                     })
                 }
             </Tabs>
-            <Button size="small" sx={{minWidth: 40}}><AddIcon sx={{ color: 'black' }} fontSize="small"/></Button>
+            <Button
+                className="add-new"
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    color: 'black'
+                }}
+            >
+                <div className="addIcon"><AddIcon fontSize="small"/></div>
+            </Button>
         </Box>
     );
 };

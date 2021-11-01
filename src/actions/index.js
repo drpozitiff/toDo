@@ -187,10 +187,17 @@ export const hideSnackbar = () => {
     };
 };
 
-export const setCookie = (cookie) => {
+export const setIsAuth = (isAuth) => {
     return {
-        type: "SET_COOKIE",
-        cookie
+        type: "SET_AUTH",
+        isAuth
+    };
+};
+
+export const setUserId = (userId) => {
+    return {
+        type: "SET_USER_ID",
+        userId
     };
 };
 
@@ -207,7 +214,7 @@ export const getBases = () => {
             .then(res => {
                 dispatch({
                     type: 'GET_BASES',
-                    payload: res.data
+                    payload: res.data.bases
                 })
             }).catch((err)=>{console.log('getBases err',err)});
     };
@@ -219,10 +226,29 @@ export const getFishInfo = (baseID) => {
             .then(res => {
                 dispatch({
                     type: 'GET_FISH_INFO',
-                    payload: res.data
+                    payload: res.data.fishBase
                 })
             }).catch((err)=>{console.log('getFishInfo err',err)});
     };
+};
+
+export const getUserFishInfo = (baseID) => {
+    return async dispatch => {
+        await axios.get(`http://localhost:3001/fish/getUserFishInfo?baseId=${baseID}`)
+            .then(res => {
+                dispatch({
+                    type: 'GET_USER_FISH_INFO',
+                    payload: res.data.userFishInfo
+                })
+            }).catch((err)=>{console.log('getUserFishInfo err',err)});
+    };
+};
+
+export const resetUserFishInfo = () => {
+    return {
+        type: "RESET_USER_FISH_INFO",
+        payload: []
+    }
 };
 
 export const setCurrentBase = (baseId) => {

@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
-import {showSnackbar, hideSnackbar, setCookie, saveUserData} from "../actions/index";
+import {showSnackbar, hideSnackbar, setIsAuth, setUserId, saveUserData} from "../actions/index";
 import connect from "react-redux/es/connect/connect";
 
-const registration = async (registrationObject, registrationType, showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData) => {
+const registration = async (registrationObject, registrationType, showSnackbar,
+                            setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg,
+                            handleOpenClose, setIsAuth, setUserId, saveUserData) => {
     await axios.post(`http://localhost:3001/auth/${registrationType}`, registrationObject)
         .then(res => {
             const userData = {
@@ -15,16 +17,20 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
                 severity: 'success',
                 message: res.data.message
             });
-            (registrationType === "login") && setIsAuth(true);
+            const userId = res.data.candidate?.userId;
+            if (registrationType === "login"){
+                setUserId(userId)
+                setIsAuth(true);
+            }
             handleOpenClose(false);
             saveUserData(userData);
         }).catch(err => {
             showSnackbar({
                 severity: 'error',
-                message: err.response.data.message
+                message: err.response?.data.message
             });
-            const errors = err.response.data.errors;
-            for(let i = 0; i < errors.length; i++){
+            const errors = err.response?.data.errors;
+            for(let i = 0; i < errors?.length; i++){
                 if (errors[i]['param'] === 'username'){
                     setUsernameErrorMsg(errors[i]['msg']);
                     break;
@@ -33,7 +39,7 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
                 }
             }
 
-            for(let i = 0; i < errors.length; i++){
+            for(let i = 0; i < errors?.length; i++){
                 if (errors[i]['param'] === 'email') {
                     setEmailErrorMsg(errors[i]['msg']);
                     break;
@@ -42,7 +48,7 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
                 }
             }
 
-            for(let i = 0; i < errors.length; i++){
+            for(let i = 0; i < errors?.length; i++){
                 if(errors[i]['param'] === 'password'){
                     setPasswordErrorMsg(errors[i]['msg']);
                     break;
@@ -50,11 +56,11 @@ const registration = async (registrationObject, registrationType, showSnackbar, 
                     setPasswordErrorMsg('');
                 }
             }
-            console.log('login error ui', err.response.data.errors)
+            console.log('login error ui', err)
         });
 };
 
-const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, saveUserData}) => {
+const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, setUserId, saveUserData}) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -93,13 +99,13 @@ const RegistrationForm = ({isLogin, showSnackbar, handleOpenClose, setIsAuth, sa
                 {
                     !isLogin &&
                     <Button variant="outline-secondary" className="signUpBtn btn" onClick={() => {
-                        registration(registrationObject, "login", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData);
+                        registration(registrationObject, "login", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, setUserId, saveUserData);
                     }}>Login</Button>
                 }
                 {
                     isLogin &&
                     <Button variant="outline-secondary" className="signUpBtn btn" onClick={() => {
-                        registration(registrationObject, "registration", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, saveUserData);
+                        registration(registrationObject, "registration", showSnackbar, setUsernameErrorMsg, setEmailErrorMsg, setPasswordErrorMsg, handleOpenClose, setIsAuth, setUserId, saveUserData);
                     }}>Sign up</Button>
                 }
             </div>
@@ -118,7 +124,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         showSnackbar: (message) => dispatch(showSnackbar(message)),
         hideSnackbar: () => dispatch(hideSnackbar()),
-        setIsAuth: (cookie) => dispatch(setCookie(cookie)),
+        setIsAuth: (isAuth) => dispatch(setIsAuth(isAuth)),
+        setUserId: (userId) => dispatch(setUserId(userId)),
         saveUserData: (userData) => dispatch(saveUserData(userData))
     }
 };

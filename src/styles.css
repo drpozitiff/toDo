@@ -108,10 +108,95 @@ body {
 }
 
 .addIcon {
-    margin: 0 10px 0 0;
     transition: transform 0.5s;
 }
 
-.add-new-article:hover .addIcon {
+.add-new:hover .addIcon {
     transform: rotate(270deg);
+}
+
+img {
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    /*image-rendering: pixelated; !* Chrome *!*/
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+
+}
+
+.card {
+    border-radius: 6px;
+    background: #fff;
+    padding: 1rem;
+    box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .5rem;
+}
+.preview-image {
+    position: relative;
+    margin-bottom: .5rem;
+    margin-right: .5rem;
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+}
+.preview-remove {
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-weight: bold;
+    background: rgba(255, 255, 255, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity .22s;
+}
+
+.preview-image:hover .preview-remove {
+    opacity: 1;
+}
+
+.preview-image:hover .preview-info {
+    bottom: 0;
+}
+
+.preview-info {
+    position: absolute;
+    right: 0;
+    bottom: -25px;
+    left: 0;
+    height: 25px;
+    font-size: .8rem;
+    background: rgba(255, 255, 255, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    transition: bottom .22s;
+}
+
+.preview-image.removing {
+    transform: scale(0);
+    transition: transform .3s;
+}
+
+.preview-info-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #42b983;
+    text-align: center;
+    transition: width .22s;
 }

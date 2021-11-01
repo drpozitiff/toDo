@@ -26,9 +26,14 @@ const users = (state = defaultState, action) => {
         case "HIDE_SNACKBAR":
             return {...state, isSnackbarOpen: false};
 
-        case "SET_COOKIE": {
+        case "SET_AUTH": {
             const newState = JSON.parse(JSON.stringify(state));
-            newState.isAuth = action.cookie;
+            newState.isAuth = action.isAuth;
+            return newState;
+        }
+        case "SET_USER_ID": {
+            const newState = JSON.parse(JSON.stringify(state));
+            newState.userId = action.userId;
             return newState;
         }
         case "SAVE_USER_DATA": {

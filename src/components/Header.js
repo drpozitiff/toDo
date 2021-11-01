@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Nav } from 'react-bootstrap';
 import connect from "react-redux/es/connect/connect";
-import {setCookie, saveUserData} from "../actions/index";
+import {setIsAuth, setUserId, saveUserData, resetUserFishInfo} from "../actions/index";
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
@@ -22,7 +22,7 @@ import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import { Container } from '@mui/material';
 
-const Header = ({isAuth, setCookie, saveUserData}) => {
+const Header = ({isAuth, setIsAuth, setUserId, saveUserData, resetUserFishInfo}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
 
@@ -38,7 +38,9 @@ const Header = ({isAuth, setCookie, saveUserData}) => {
     const logout = async () => {
         await axios.post('http://localhost:3001/auth/logout')
             .then(res => {
-                setCookie(false);
+                setIsAuth(false);
+                setUserId('');
+                resetUserFishInfo();
                 saveUserData({
                     userName: '',
                     userEmail: '',
@@ -218,8 +220,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setCookie: (cookie) => dispatch(setCookie(cookie)),
-        saveUserData: (userData) => dispatch(saveUserData(userData))
+        setIsAuth: (isAuth) => dispatch(setIsAuth(isAuth)),
+        setUserId: (userId) => dispatch(setUserId(userId)),
+        saveUserData: (userData) => dispatch(saveUserData(userData)),
+        resetUserFishInfo: () => dispatch(resetUserFishInfo())
     }
 };
 

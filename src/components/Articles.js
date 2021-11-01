@@ -10,8 +10,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import SnackbarMessage from './SnackbarMessage';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -71,7 +71,7 @@ class Articles extends Component {
                             {isAuth &&
                                 <Button
                                     onClick={() => {openForm()}}
-                                    className="add-new-article"
+                                    className="add-new"
                                     style={{
                                         textAlign: "center",
                                         color: 'black'
